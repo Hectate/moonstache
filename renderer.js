@@ -16,7 +16,6 @@ var pass = "CheckOutThisPassword";
 const greeting = {password:pass,author:username};
 
 var sanitizeHtml = require('sanitize-html');
-var marked = require('marked');
 
 //Selectors
 var serverNameEl = document.getElementById('server-name-text');
