@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html class="uk-height-1-1">
+  <head>
+    <title>Germergerger</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css\uikit.almost-flat.css" />
+    <link rel="stylesheet" href="css\components\progress.almost-flat.css"/>
+    <link rel="stylesheet" href="css\components\tooltip.almost-flat.css" />
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <!-- normal script imports etc  -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/uikit.min.js"></script>
+    <script src="js/core/modal.js"></script>
+    <script src="js/components/tooltip.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+    <!-- Electron Javascript -->
+    <script>
+      // You can also require other files to run in this process
+    </script>
+  </head>
+  <body class="uk-height-1-1">
+    <!-- Wrap your entire app inside .window -->
+    <div class="window">
+      <!-- Your app's content goes inside .window-content -->
+      <div class="window-content">
+        <div class="uk-container uk-padding-remove uk-height-1-1">
+          <nav class="uk-navbar uk-navbar-attached">
+            <ul class="uk-navbar-nav">
+              <li class="uk-parent uk-navbar-dropdown" data-uk-dropdown="{remaintime:100}">
+                <a><span class="uk-icon-folder-open-o uk-icon-medium uk-icon-hover"/></a>
+                <div class="uk-dropdown uk-dropdown-navbar">
+                  <ul class="uk-nav uk-nav-navbar">
+                      <li><a id="load-to-slot-a">Load to Slot A</a></li>
+                      <li><a id="load-to-slot-b">Load to Slot B</a></li>
+                  </ul>
+                </div>
+              </li>
+              <li data-uk-tooltip title="Merge Ruleset"><a><span class="uk-icon-compass uk-icon-medium uk-icon-hover" /></a></li>
+              <li data-uk-tooltip title="Resource Types" >
+                <a href="#offcanvas-1" data-uk-offcanvas="{mode:'slide'}">
+                  <span class="uk-icon-bars uk-icon-medium uk-icon-hover"/>
+                </a>
+                <div id="offcanvas-1" class="uk-offcanvas" aria-hidden="true">
+                    <div class="uk-offcanvas-bar" mode="slide">
+                        <div class="uk-panel"><span class="uk-text-large uk-text-bold">Resources</span><a href="javascript:UIkit.offcanvas.hide(false)" class="uk-close uk-close-alt uk-align-right"></a></div>
+                        <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>
+                          <li class="uk-active">
+                            <a>Actors
+                              <div class="uk-badge uk-badge-danger uk-badge-notification uk-align-right">1</div>
+                              <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">12</div>
+                            </a>
+                          </li>
+                          <li><a>Scenes
+                                <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">8</div>
+                              </a></li>
+                          <li><a>Tilesets</a></li>
+                          <li><a>Fonts</a></li>
+                          <li>
+                            <a>Behaviors
+                              <div class="uk-badge uk-badge-danger uk-badge-notification uk-align-right">2</div>
+                              <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">6</div>
+                            </a>
+                          </li>
+                          <li><a>Game Settings</a></li>
+                          <li><a>Extensions</a></li>
+                        </ul>
+                        <div class="uk-panel">Lorem ipsum dolor sit amet, <a>consectetur</a> adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</div>
+                        <div class="uk-panel">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                    </div>
+                </div>
+              </li>
+              <li data-uk-tooltip title="Toggle Output" id="toggle-output-button" data-uk-toggle="{target: '#output-div', animation:'uk-animation-slide-bottom'}"><a><span class="uk-icon-terminal uk-icon-medium uk-icon-hover" /></a></li>
+            </ul>
+            <div class="uk-navbar-flip">
+              <ul class="uk-navbar-nav">
+                <li id="settings-button" data-uk-tooltip title="Configuration Settings"><a><span class="uk-icon-cogs uk-icon-medium uk-icon-hover" /></a></li>
+                <li id="help-button" data-uk-tooltip title="Help"><a href="#help-modal" data-uk-modal><span class="uk-icon-question-circle-o uk-icon-medium uk-icon-hover" /></a></li>
+                <div id="help-modal" class="uk-modal">
+                  <div class="uk-modal-dialog">
+                    <a class="uk-modal-close uk-close"></a>
+                    <ul class="uk-list uk-list-line uk-list-space">
+                      <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-globe uk-icon-justify"></i>  View Online Help</a></li>
+                      <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-list-ul uk-icon-justify"></i>  Open Stencyl Forums</a></li>
+                      <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-comments-o uk-icon-justify"></i>  Chat on Discord</a></li>
+                      <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-file-code-o uk-icon-justify"></i>  View Quick-Start Guide</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </ul>
+            </div>
+          </nav>
+          <ul class="uk-tab uk-tab-grid" data-uk-tab>
+            <li class="uk-width-1-4 uk-active"><a>Show All</a></li>
+            <li class="uk-width-1-4"><a>Conflicting</a></li>
+            <li class="uk-width-1-4"><a>Compatible</a></li>
+            <li class="uk-width-1-4"><a>Unique</a></li>
+          </ul>
+          <div class="uk-grid uk-grid-collapse uk-scrollable-box">
+            <div class="uk-width-1-3">
+              <div class="uk-panel">
+                <table id="game-table-a" class="uk-table-striped uk-table-hover uk-width-1-1">
+                  <caption>Game Slot A <a href="" id="game-a-info-icon"><span class="uk-icon-info-circle uk-text-primary"></span></a></caption>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="uk-width-1-3">
+              <div class="uk-panel">
+                <table id="game-table-b" class="uk-table-striped uk-table-hover uk-width-1-1">
+                  <caption>Game Slot B</caption>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="uk-width-1-3">
+              <div class="uk-panel">
+                <table id="game-table-out" class="uk-table-striped uk-table-hover uk-width-1-1">
+                  <caption>Output Game</caption>
+                  <tbody>
+                  </tbody>
+                </table>
+              </div>
+            </div> 
+          </div>
+          <!-- hiding progress bar and cancel button - probably move to a popup later
+          <div class="uk-grid">
+            <div class="uk-width-1-10"></div>
+            <div class="uk-width-7-10">
+              <div class="uk-panel">
+                <div class="uk-progress uk-progress-striped uk-active">
+                  <div class="uk-progress-bar" style="width: 100%;">Working...</div>
+                </div>
+              </div>
+            </div>
+            <div class="uk-width-2-10">
+              <div class="uk-panel">
+                <button class="uk-button uk-button-large uk-button-danger" type="button">CANCEL</button>
+              </div>
+            </div>
+          </div>
+          -->
+          <div id="output-div" class="uk-block uk-block-muted uk-padding-remove uk-visible-hover-inline uk-hidden" style="height:100px">
+            <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:100px">
+              <!-- output content fills in here -->
+            </pre>
+            <nav class="uk-navbar uk-navbar-attached">
+              <ul class="uk-navbar-nav">
+                <li data-uk-tooltip title="Copy To Clipboard"><a id="copy-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-clipboard"></i></a></li>
+                <li data-uk-tooltip title="Save To Disk"><a id="save-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-floppy-o"></i></a></li>
+              </ul>
+              <div class="uk-navbar-flip">
+                <ul class="uk-navbar-nav">
+                  <li data-uk-tooltip title="Clear Output Window"><a id="clear-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-trash"></i></a></li>
+                  <li data-uk-tooltip title="Close Output Window" data-uk-toggle="{target: '#output-div',animation:'uk-animation-slide-bottom'}"><a id="close-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-close"></i></a></li>
+                </ul>
+              </div>
+            </nav>
+          </div>
+        </div>
+        <!-- end uk-container -->
+      </div>
+      <!-- end window-content -->
+    </div>
+    <!-- end window -->
+  </body>
+  <script>
+         require('./renderer.js')
+  </script>
+</html>

@@ -1,22 +1,45 @@
-const electron = require('electron')
+const electron = require('electron');
+var ipcMain = require('electron').ipcMain;
+var fs = require('fs');
 // Module to control application life.
 const app = electron.app
+const dialog = electron.dialog;
 // Module to create native browser window.
-const BrowserWindow = electron.BrowserWindow
+const BrowserWindow = electron.BrowserWindow;
+const JSZip = require('jszip');
+
+global.appconfig = require( __dirname + '/json/appconfig.json');
+global.gameA = {};
+global.gameB = {};
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let mainWindow
+let mainWindow;
+let settingsWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600})
+  //get max size window if we want it
+  //const {width, height} = electron.screen.getPrimaryDisplay().workAreaSize
+  //mainWindow = new BrowserWindow({
+   // width,
+   // height,
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    frame: true,
+    useContentSize: true,
+    title: "Moonstache",
+    autoHideMenuBar: false,
+    icon: __dirname + '/assets/icons/png/moon_app_icon_64.png'
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/index.html`)
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+  mainWindow.maximize();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
@@ -24,7 +47,7 @@ function createWindow () {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-  })
+  });
 }
 
 // This method will be called when Electron has finished
@@ -45,9 +68,76 @@ app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
-    createWindow()
+    createWindow();
   }
 })
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.on('open-settings-window', function () {
+    //console.log("open-settings-window click detected from event in main.js");
+    settingsWindow = new BrowserWindow({
+      parent:mainWindow,
+      modal:true,
+      show:false,
+      autoHideMenuBar: true,
+      frame:false,
+      height:380,
+      transparent:true,
+      useContentSize:true
+    });
+    settingsWindow.loadURL(`file://${__dirname}/settings.html`);
+    settingsWindow.once('ready-to-show', () => {
+      //settingsWindow.webContents.openDevTools();
+      settingsWindow.webContents.send('fill-settings-form');
+      settingsWindow.show();
+    });
+});
+
+ipcMain.on('close-settings-window', function () {
+  mainWindow.send('modal-hide');
+  settingsWindow.close();
+});
+
+ipcMain.on('save-settings', (event, arg) => {
+  saveSettings(arg);
+});
+
+ipcMain.on('request-slot-a', function () {
+  getFile().then(function(response) {
+    mainWindow.send('fill-slot-a',response);
+  }).catch(function(error) {
+    console.log(error);
+   });
+});
+ipcMain.on('request-slot-b', function () {
+  var fileData = getFile();
+  mainWindow.send('fill-slot-b',fileData);
+});
+
+function saveSettings(config) {
+  console.log("Saving settings to disk...");
+  appconfig.theme = config.theme;
+  appconfig.save = config.save;
+  appconfig.path = config.path;
+  console.log(appconfig);
+}
+
+function getFile() {
+  return new Promise(function(resolve,reject) {
+    dialog.showOpenDialog(function (fileNames) {
+      if(fileNames === undefined) {
+        reject("No file selected");
+      }
+      else {
+        fs.readFile(fileNames[0], 'utf-8', function (err, data) {
+            if(err) {
+              reject("An error ocurred reading the file :" + err.message);
+            }
+            //console.log(data);
+            resolve(data);
+        });
+      }
+    });
+  });
+}

@@ -1,19 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html class="uk-height-1-1">
   <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-  </body>
+    <title>Moonstache</title>
 
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css\uikit.almost-flat.css" />
+    <link rel="stylesheet" href="css\components\progress.almost-flat.css"/>
+    <link rel="stylesheet" href="css\components\tooltip.almost-flat.css" />
+    <!-- Insert this line above script imports  -->
+    <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+    <!-- normal script imports etc  -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/uikit.min.js"></script>
+    <script src="js/core/modal.js"></script>
+    <script src="js/components/tooltip.js"></script>
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+    <!-- Electron Javascript -->
+    <script>
+      // You can also require other files to run in this process
+    </script>
+  </head>
+  <body class="uk-height-1-1">
+    <div class="uk-container uk-padding-remove uk-height-1-1">
+      <nav class="uk-navbar uk-navbar-attached">
+        <ul class="uk-navbar-nav">
+          <li id="nav-server" data-uk-tooltip title="Server"><a href="#server-modal" data-uk-modal><span class="uk-icon-sitemap uk-icon-medium uk-icon-hover" /></a></li>
+            <div id="server-modal" class="uk-modal">
+              <div class="uk-modal-dialog">
+                <a class="uk-modal-close uk-close"></a>
+                <form class="uk-form">
+                  <fieldset data-uk-margin>
+                    <legend>Servers</legend>
+                    <select id="server-select-option-list">
+                      <option>Saved servers</option>
+                    </select>
+                    <input id="server-name-text" type="text" placeholder="Server name">
+                    <input id="server-ip-text" type="text" placeholder="000.000.000.000">
+                    <input id="server-port-text" type="text" placeholder="80">
+                    <label><input id="server-save-checkbox" type="checkbox">Save</label>
+                    <button id="server-connect-button" type="button" class="uk-button" data-uk-tooltip title="Disconnects any current server also!">Connect</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          <li data-uk-tooltip title="Users" >
+            <a href="#offcanvas-1" data-uk-offcanvas="{mode:'slide'}">
+              <span class="uk-icon-users uk-icon-medium uk-icon-hover"/>
+            </a>
+            <div id="offcanvas-1" class="uk-offcanvas" aria-hidden="true">
+                <div class="uk-offcanvas-bar" mode="slide">
+                    <div class="uk-panel"><span class="uk-text-large uk-text-bold">Users</span><a href="javascript:UIkit.offcanvas.hide(false)" class="uk-close uk-close-alt uk-align-right"></a></div>
+                    <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>
+                      <li id="nav-users">
+                        <a>User1
+                          <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">12</div>
+                        </a>
+                      </li>
+                      <li id="nav-backgrounds"><a>User2</a></li>
+                      <li id="nav-behaviors">
+                        <a>User3
+                          <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">6</div>
+                        </a>
+                      </li>
+                      <li id="nav-extensions"><a>User4</a></li>
+                      <li id="nav-fonts"><a>User5</a></li>
+                      <li id="nav-scenes"><a>User6
+                            <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">8</div>
+                          </a></li>
+                      <li id="nav-settings"><a>User7</a></li>
+                      <li id="nav-sounds"><a>User8</a></li>
+                      <li id="nav-tilesets"><a>User9</a></li>
+                    </ul>
+                    <div class="uk-panel">Click a user to open a direct message tab with them.</div>
+                </div>
+            </div>
+          </li>
+          <li data-uk-tooltip title="Toggle Console" id="toggle-output-button" data-uk-toggle="{target: '#output-div'}"><a><span class="uk-icon-terminal uk-icon-medium uk-icon-hover" /></a></li>
+        </ul>
+        <div class="uk-navbar-flip">
+          <ul class="uk-navbar-nav">
+            <li id="settings-button" data-uk-tooltip title="Configuration Settings"><a><span class="uk-icon-cogs uk-icon-medium uk-icon-hover" /></a></li>
+            <li id="help-button" data-uk-tooltip title="Help"><a href="#help-modal" data-uk-modal><span class="uk-icon-question-circle-o uk-icon-medium uk-icon-hover" /></a></li>
+            <div id="help-modal" class="uk-modal">
+              <div class="uk-modal-dialog">
+                <a class="uk-modal-close uk-close"></a>
+                <ul class="uk-list uk-list-line uk-list-space">
+                  <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-globe uk-icon-justify"></i>  View Online Help</a></li>
+                  <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-list-ul uk-icon-justify"></i>  Open Stencyl Forums</a></li>
+                  <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-comments-o uk-icon-justify"></i>  Chat on Discord</a></li>
+                  <li><a style="text-decoration:none"><i class="uk-icon-medium uk-icon-file-code-o uk-icon-justify"></i>  View Quick-Start Guide</a></li>
+                </ul>
+              </div>
+            </div>
+          </ul>
+        </div>
+      </nav>
+      <ul class="uk-tab uk-tab-grid" data-uk-tab>
+        <li class="uk-active"><a>Chatroom 1</a></li>
+        <li class=""><a>Chatroom 2</a></li>
+        <li class=""><a>User 1</a></li>
+        <li class=""><a>User 4</a></li>
+      </ul>
+      <div id="chat-window-box" class="uk-grid uk-grid-collapse uk-scrollable-box" style="height:calc(100% - 78px);">
+        <div class="uk-width-1-1">
+          <div class="uk-panel">
+            <table id="chat-window-table" class="uk-table-striped uk-table-hover uk-width-1-1">
+              <caption>No server connection.</caption>
+              <tbody>
+              </tbody>
+            </table>
+            <div id="chat-input-box" class="uk-grid uk-grid-collapse">
+              <input id="chat-input-text" type="text" placeholder="" autofocus="autofocus">
+              <button id="chat-send-button" type="button" class="uk-button">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- hiding progress bar and cancel button - probably move to a popup later
+      <div class="uk-grid">
+        <div class="uk-width-1-10"></div>
+        <div class="uk-width-7-10">
+          <div class="uk-panel">
+            <div class="uk-progress uk-progress-striped uk-active">
+              <div class="uk-progress-bar" style="width: 100%;">Working...</div>
+            </div>
+          </div>
+        </div>
+        <div class="uk-width-2-10">
+          <div class="uk-panel">
+            <button class="uk-button uk-button-large uk-button-danger" type="button">CANCEL</button>
+          </div>
+        </div>
+      </div>
+      -->
+      <div id="output-div" class="uk-block uk-block-muted uk-padding-remove uk-visible-hover-inline uk-hidden" style="height:calc(30vh - 78px)">
+        <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:calc(30vh - 78px)"></pre>
+        <nav class="uk-navbar uk-navbar-attached">
+          <ul class="uk-navbar-nav">
+            <li data-uk-tooltip title="Copy To Clipboard"><a id="copy-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-clipboard"></i></a></li>
+            <li data-uk-tooltip title="Save To Disk"><a id="save-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-floppy-o"></i></a></li>
+          </ul>
+          <div class="uk-navbar-flip">
+            <ul class="uk-navbar-nav">
+              <li data-uk-tooltip title="Clear Output Window"><a id="clear-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-trash"></i></a></li>
+              <li data-uk-tooltip title="Close Output Window" data-uk-toggle="{target: '#output-div'}"><a id="close-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-close"></i></a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <!-- end uk-container -->
+  </body>
   <script>
-    // You can also require other files to run in this process
-    require('./renderer.js')
+         require('./renderer.js')
   </script>
 </html>

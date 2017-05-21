@@ -1,0 +1,52 @@
+<html class="uk-height-1-1">
+    <head>
+        <title>Configuration Settings</title>
+        <link rel="stylesheet" href="css\uikit.almost-flat.css" />
+        <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+        <!-- normal script imports etc  -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/uikit.min.js"></script>
+        <!-- Insert this line after script imports -->
+        <script>if (window.module) module = window.module;</script>
+    </head>
+    <body class="uk-height-1-1">
+        <div class="window">
+            <div class="window-content">
+                <div class="uk-container uk-padding-remove uk-height-1-1">
+                    <div class="uk-panel uk-panel-box">
+                        <h4 class="uk-panel-title">Configuration Settings <i class="uk-icon-cogs uk-align-left"></i></h4>
+                        <form class="uk-form">
+                            <fieldset data-uk-margin>
+                                <dl class="uk-description-list-line">
+                                    <dt>Default Working Directory</dt>
+                                    <dd><input id="settings-path-text-value" type=text placeholder="a/path/will/be/here" disabled><button id="settings-window-directory-button" class="uk-button" type="button">Select</button></dd>
+                                    <dt>Save and Reload Session</dt>
+                                    <dd><input id="settings-save-session-checkbox" type=checkbox><span class="uk-form-help-inline">Leave this checked to save your past session when quitting and reload it when the program starts again later.</span></dd>
+                                    <dt>Theme</dt>
+                                    <dd>
+                                        <select id="settings-select-active-theme">
+                                            <option>Light Theme</option>
+                                            <option>Dark Theme (disabled)</option>
+                                        </select>
+                                    </dd>
+                                    <dt>About</dt>
+                                    <dd>Moonstache version 1.0.0 created by Nathaniel 'Hectate' Mitchell
+                                        <p><i>A chat client for a crazy websocket-based chat server.</i></p>
+                                    </dd>
+                                    <dt></dt>
+                                    <dd>
+                                        <button id="settings-window-save-button" class="uk-button uk-button-large uk-align-left uk-button-primary" type="button">Save</button>
+                                        <button id="settings-window-cancel-button" class="uk-button uk-button-large uk-align-right uk-button-danger" type="button">Cancel</button>
+                                    </dd>
+                                </dl>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+        require("./settings.js")
+    </script>
+</html>
