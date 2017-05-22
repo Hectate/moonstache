@@ -54,10 +54,12 @@ settingsEl.addEventListener('click', function () {
   //setTimeout(function(){modal.hide()},5000);
   ipc.send('open-settings-window');
 });
+/*
 ipc.on('modal-hide', function() {
   console.log('hiding modal');
   modal.hide();
 });
+*/
 
 //Navs for users views
 navServerEl.addEventListener('click',function () { console.log("server connection needed."); });
@@ -108,32 +110,47 @@ function connectToServer(server) {
   });
 
   ws.on('message', function incoming(data) {
-    var d = JSON.parse(data);
-    var clean = sanitizeHtml(data);
-    d.message = sanitizeHtml(d.message);
-    addToOutput(clean);
-    if(d.type == "broadcast") {
-      var t = '<div class="uk-text-primary"><span class="uk-icon-server"/>  ' + d.message + '</div>';
-      addToTable(chatWindowTableEl,t);
-      chatScrollDown();
+    parseMessage(data);
+  });
+}
+
+function parseMessage(data) {
+  var d = JSON.parse(data);
+  var clean = sanitizeHtml(data);
+  d.message = sanitizeHtml(d.message);
+  addToOutput("Recd: " + clean);
+
+  //types are "auth" "message" "join" or "quit"
+  if(d.type == "join") {
+    var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.message + ' has joined.' + '</div>';
+    addToTable(chatWindowTableEl,t);
+    chatScrollDown();
+  }
+  else if(d.type == "quit") {
+    var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.message + ' has left.' + '</div>';
+    addToTable(chatWindowTableEl,t);
+    chatScrollDown();
+  }
+  else if (d.type == "auth") {
+    var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  ' + d.message + '</div>';
+    addToTable(chatWindowTableEl,t);
+  }
+  else { //presumably a message or anything else lol
+    var t = "";
+    var arrText = d.message.split(" ");
+    if(arrText[0] == "/me") {
+      var t = "<i>" + d.author;
+      for(var i = 1; i < arrText.length; i++) {
+        t += " " + arrText[i];
+      }
+      t += "</i>";
     }
     else {
-      var t = "";
-      var arrText = d.message.split(" ");
-      if(arrText[0] == "/me") {
-        var t = "<i>" + d.author;
-        for(var i = 1; i < arrText.length; i++) {
-          t += " " + arrText[i];
-        }
-        t += "</i>";
-      }
-      else {
-        var t = "<b>" + d.author + ":</b> " + d.message;
-      }
-      addToTable(chatWindowTableEl,t);
-      chatScrollDown();
+      var t = "<b>" + d.author + ":</b> " + d.message;
     }
-  });
+    addToTable(chatWindowTableEl,t);
+    chatScrollDown();
+  }
 }
 
 function chatScrollDown() {
