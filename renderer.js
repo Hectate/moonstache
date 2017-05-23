@@ -1,6 +1,7 @@
 // This file is required by the index.html file and will
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
+var config = require( __dirname + '/json/appconfig.json');
 var ipc = require('electron').ipcRenderer;
 var remote = require('electron').remote;
 var WebSocket = require('ws');
@@ -9,10 +10,10 @@ var os = require('os');
 var fs = require('fs');
 const {dialog} = require('electron').remote;
 const {clipboard} = require('electron').remote;
-var serverIP = "158.69.196.28";
-var serverPort = "5000";
-var username = "Hectate";
-var pass = "CheckOutThisPassword";
+var serverIP = config.serverIP;
+var serverPort = config.serverPort;
+var username = config.username;
+var pass = config.password;
 const greeting = {password:pass,author:username};
 
 var sanitizeHtml = require('sanitize-html');
@@ -120,7 +121,7 @@ function parseMessage(data) {
   d.message = sanitizeHtml(d.message);
   addToOutput("Recd: " + clean);
 
-  //types are "auth" "message" "join" or "quit"
+  //types are "auth" "user_list" "direct_message" "message" "join" or "quit"
   if(d.type == "join") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.message + ' has joined.' + '</div>';
     addToTable(chatWindowTableEl,t);
@@ -134,6 +135,17 @@ function parseMessage(data) {
   else if (d.type == "auth") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  ' + d.message + '</div>';
     addToTable(chatWindowTableEl,t);
+  }
+  else if (d.type == "direct_message") {
+    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + '</b>  ' + d.message + '</div>';
+    addToTable(chatWindowTableEl,t);
+  }
+  else if (d.type == "user_list") {
+    var t = "Users received: ";
+    for(var i=0; i < d.users.length; i++) {
+      t += d.users[i] + ", ";
+    }
+    addToOutput(d.users);
   }
   else { //presumably a message or anything else lol
     var t = "";
