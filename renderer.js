@@ -12,9 +12,11 @@ const {dialog} = require('electron').remote;
 const {clipboard} = require('electron').remote;
 var serverIP = config.serverIP;
 var serverPort = config.serverPort;
-var username = config.username;
+var handle = config.username;
 var pass = config.password;
-const greeting = {password:pass,author:username};
+const greeting = {type:"auth",password:pass,username:handle};
+var history = {};
+var users = {};
 
 var sanitizeHtml = require('sanitize-html');
 
@@ -26,6 +28,7 @@ var serverSaveCheckEl = document.getElementById('server-save-checkbox');
 var serverConnectButtonEl = document.getElementById('server-connect-button');
 var settingsEl = document.getElementById('settings-button');
 var navServerEl = document.getElementById('nav-server');
+var navBarStatusEl = document.getElementById('nav-center');
 var outputBoxEl = document.getElementById("output-box");
 var outputDivEl = document.getElementById('output-div');
 var saveOutputEl = document.getElementById('save-output-button');
@@ -95,7 +98,7 @@ chatSendButtonEl.addEventListener('click', function () {
 function sendMessage(string) {
   var o = {
     message:string,
-    author:username,
+    author:handle,
     type:"message"
   };
   //addToOutput(JSON.stringify(o));
@@ -107,7 +110,7 @@ function connectToServer(server) {
 
   ws.on('open', function open() {
     ws.send(JSON.stringify(greeting));
-    chatWindowTableEl.caption.innerHTML = "Connected"
+    navBarStatusEl.innerHTML = "Connected to..."
   });
 
   ws.on('message', function incoming(data) {
@@ -121,20 +124,35 @@ function parseMessage(data) {
   d.message = sanitizeHtml(d.message);
   addToOutput("Recd: " + clean);
 
-  //types are "auth" "user_list" "direct_message" "message" "join" or "quit"
+  //types are "auth" "user_list" "direct_message" "message" "join" "quit" "broadcast"
   if(d.type == "join") {
-    var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.message + ' has joined.' + '</div>';
+    var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.username + ' has joined.' + '</div>';
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
+    users[d.username] = "online";
+    addToOutput(JSON.stringify(users));
   }
   else if(d.type == "quit") {
-    var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.message + ' has left.' + '</div>';
+    var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.username + ' has left.' + '</div>';
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
+    users[d.username] = "offline";
+    addToOutput(JSON.stringify(users));
   }
-  else if (d.type == "auth") {
+  else if (d.type == "broadcast") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  ' + d.message + '</div>';
     addToTable(chatWindowTableEl,t);
+  }
+  else if (d.type == "auth") {
+    if(d.success = true) {
+      navBarStatusEl.innerHTML = "Connected to..."
+      var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Connected to server.</div>';
+      addToTable(chatWindowTableEl,t);
+    }
+    else {
+      var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Unable to connect.</div>';
+      addToTable(chatWindowTableEl,t);
+    }
   }
   else if (d.type == "direct_message") {
     var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + '</b>  ' + d.message + '</div>';
@@ -144,8 +162,13 @@ function parseMessage(data) {
     var t = "Users received: ";
     for(var i=0; i < d.users.length; i++) {
       t += d.users[i] + ", ";
+      users[d.users[i]] = "online";
     }
-    addToOutput(d.users);
+    addToOutput(JSON.stringify(users));
+    addToOutput(t);
+  }
+  else if (d.type == "typing") {
+    addToOutput(JSON.stringify(d));
   }
   else { //presumably a message or anything else lol
     var t = "";
@@ -192,7 +215,7 @@ function shrinkChatWindowBox() {
    gridSmall=true;
 }
 function growChatWindowBox() {
-  chatWindowBoxEl.style.height = "calc(100% - 78px)";
+  chatWindowBoxEl.style.height = "calc(100% - 108px)";
   gridSmall=false;
 }
 

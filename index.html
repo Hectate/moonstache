@@ -95,6 +95,8 @@
             </div>
           </ul>
         </div>
+        <div id="nav-center" class="uk-navbar-content uk-navbar-center uk-text-muted">No connection
+        </div>
       </nav>
       <ul class="uk-tab uk-tab-grid" data-uk-tab>
         <li class="uk-active"><a>Chatroom 1</a></li>
@@ -102,20 +104,20 @@
         <li class=""><a>User 1</a></li>
         <li class=""><a>User 4</a></li>
       </ul>
-      <div id="chat-window-box" class="uk-grid uk-grid-collapse uk-scrollable-box" style="height:calc(100% - 78px);">
+      <div id="chat-window-box" class="uk-grid uk-grid-collapse uk-scrollable-box" style="height:calc(100% - 108px);">
         <div class="uk-width-1-1">
           <div class="uk-panel">
             <table id="chat-window-table" class="uk-table-striped uk-table-hover uk-width-1-1">
-              <caption>No server connection.</caption>
               <tbody>
               </tbody>
             </table>
-            <div id="chat-input-box" class="uk-grid uk-grid-collapse">
-              <input id="chat-input-text" type="text" placeholder="" autofocus="autofocus">
-              <button id="chat-send-button" type="button" class="uk-button">Send</button>
-            </div>
+
           </div>
         </div>
+      </div>
+      <div id="chat-input-box" class="uk-grid uk-grid-collapse">
+          <input id="chat-input-text" type="text" class="uk-width-9-10" placeholder="" autofocus="autofocus">
+        <button id="chat-send-button" type="button" class="uk-button uk-width-1-10"><i class="uk-icon-comment"></i></button>
       </div>
       <!-- hiding progress bar and cancel button - probably move to a popup later
       <div class="uk-grid">
@@ -135,7 +137,7 @@
       </div>
       -->
       <div id="output-div" class="uk-block uk-block-muted uk-padding-remove uk-visible-hover-inline uk-hidden" style="height:calc(30vh - 78px)">
-        <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:calc(30vh - 78px)"></pre>
+        <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:calc(30vh - 108px)"></pre>
         <nav class="uk-navbar uk-navbar-attached">
           <ul class="uk-navbar-nav">
             <li data-uk-tooltip title="Copy To Clipboard"><a id="copy-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-clipboard"></i></a></li>
