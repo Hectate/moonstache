@@ -37,6 +37,8 @@ var navBarStatusEl = document.getElementById('nav-center');
 //var clearOutputEl = document.getElementById('clear-output-button');
 //var closeOutputEl = document.getElementById('close-output-button');
 //var toggleOutputEl = document.getElementById('toggle-output-button');
+var channelUserListEl = document.getElementById('channel-user-list');
+var serverChatLinkEl = document.getElementById('server-chat-link');
 var chatWindowFrameEl = document.getElementById('chat-window-frame');
 var chatWindowBoxEl = document.getElementById('chat-window-box');
 var chatWindowTableEl = document.getElementById('chat-window-table');
@@ -57,11 +59,14 @@ ipc.on('modal-hide', function() {
 });
 */
 
-//Navs for users views
+//Navs listeners
 navServerEl.addEventListener('click',function () { console.log("server connection needed."); });
 serverConnectButtonEl.addEventListener('click', function () {
   addToOutput("Connecting to " + serverIP + ":" + serverPort);
   connectToServer(serverIP + ":" + serverPort);
+});
+serverChatLinkEl.addEventListener('click', function (event) {
+    rebuildChatWindow(serverIP);
 });
 
 //keyboard and input listeners
@@ -131,19 +136,20 @@ function parseMessage(data, fromHistory) {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.username + ' has joined.' + '</div>';
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
-    users[d.username] = "online";
-    addToOutput(JSON.stringify(users));
     if(!fromHistory) {
+      users[d.username] = "online";
+      addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
+      addToUsers(d.username);
     }
   }
   else if(d.type == "quit") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.username + ' has left.' + '</div>';
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
-    users[d.username] = "offline";
-    addToOutput(JSON.stringify(users));
     if(!fromHistory) {
+      users[d.username] = "offline";
+      addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
     }
   }
@@ -220,6 +226,27 @@ function addToTable(table,data) {
   //addToOutput("Table " + table.id + " : " + data);
 }
 
+function addToUsers(user) {
+  var li = document.createElement('LI');
+  var a = document.createElement('A');
+  a.href = "#";
+  var t = document.createTextNode(user);
+  a.appendChild(t);
+  li.appendChild(a);
+  channelUserListEl.appendChild(li);
+  li.addEventListener('click', function (event) {
+    rebuildChatWindow(t);
+  });
+}
+
+function rebuildChatWindow(request) {
+  if(request == serverIP) {
+    console.log("Rebuild server chat for: " + request);
+  }
+  else {
+    console.log("Rebuild user chat for: " + request.textContent);
+  }
+}
 //Output box functions and setup, etc
 /*
 clearOutputEl.addEventListener('click', function () { clearOutput(); });
