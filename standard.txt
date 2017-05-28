@@ -9,3 +9,6 @@ You will probably see this as well. This is the format for _all_ join messages, 
 
 Messages to _and_ from the server are in this format.
 {"message":"well","author":"Hectate","type":"message"}
+
+close button for tabs...
+<span class="uk-close uk-invisible"></span>

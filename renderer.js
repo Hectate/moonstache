@@ -81,6 +81,8 @@ navScenesEl.addEventListener('click', function () { toggleActive(navScenesEl); }
 navSettingsEl.addEventListener('click', function () { toggleActive(navSettingsEl); });
 navSoundsEl.addEventListener('click', function () { toggleActive(navSoundsEl); });
 navTilesetsEl.addEventListener('click', function () { toggleActive(navTilesetsEl); });
+
+//keyboard and input listeners
 chatTextInputEl.addEventListener('keyup', function (event) {
   if(event.keyCode == 13) {
     if(chatTextInputEl.value !== "") {
