@@ -18,6 +18,8 @@ const greeting = {type:"auth",password:pass,username:handle};
 var history = {};
 history[serverIP] = [];
 var users = {};
+var channelElements = {};
+channelElements[serverIP] = {};
 var displayedChat = serverIP;
 
 var sanitizeHtml = require('sanitize-html');
@@ -40,6 +42,7 @@ var navBarStatusEl = document.getElementById('nav-center');
 //var toggleOutputEl = document.getElementById('toggle-output-button');
 var channelUserListEl = document.getElementById('channel-user-list');
 var serverChatLinkEl = document.getElementById('server-chat-link');
+channelElements[serverIP] = serverChatLinkEl;
 var chatWindowFrameEl = document.getElementById('chat-window-frame');
 var chatWindowBoxEl = document.getElementById('chat-window-box');
 var chatWindowTableEl = document.getElementById('chat-window-table');
@@ -105,7 +108,7 @@ function sendMessage(string, destination) {
     };
     ws.send(JSON.stringify(o));
     o.author = handle;
-    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + o.author + ':</b>  ' + o.message + '</div>';
+    var t = '<b>' + o.author + ':</b>  ' + o.message + '</div>';
     addToTable(chatWindowTableEl,t);
     if(!history.hasOwnProperty(destination)) { history[destination] = []; }
     history[destination].push(o);
@@ -136,7 +139,7 @@ function parseMessage(data, fromHistory) {
   }
   var clean = sanitizeHtml(data);
   if(d.hasOwnProperty("message")) { d.message = sanitizeHtml(d.message); }
-  addToOutput("Recd: " + clean);
+  //addToOutput("Recd: " + clean);
 
   //types are "auth" "user_list" "direct_message" "message" "join" "quit" "broadcast"
   if(d.type == "join") {
@@ -148,7 +151,7 @@ function parseMessage(data, fromHistory) {
         addToUsers(d.username);
       }
       users[d.username] = "online";
-      addToOutput(JSON.stringify(users));
+      //addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
     }
   }
@@ -158,7 +161,7 @@ function parseMessage(data, fromHistory) {
     chatScrollDown();
     if(!fromHistory) {
       users[d.username] = "offline";
-      addToOutput(JSON.stringify(users));
+      //addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
     }
   }
@@ -184,8 +187,14 @@ function parseMessage(data, fromHistory) {
     }
   }
   else if (d.type == "direct_message") {
-    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + ':</b>  ' + d.message + '</div>';
-    addToTable(chatWindowTableEl,t);
+    var t = "<b>" + d.author + ":</b> " + d.message;
+    if(displayedChat == d.author || d.author == handle) {
+      addToTable(chatWindowTableEl,t);
+    }
+    else {
+      //TODO this isn't working?
+      channelElements[d.author].firstElementChild.className += " uk-text-success";
+    }
     if(!fromHistory) {
       if(!history.hasOwnProperty(d.author)) { history[d.author] = []; }
       history[d.author].push(d);
@@ -200,8 +209,8 @@ function parseMessage(data, fromHistory) {
       }
       users[d.users[i]] = "online";
     }
-    addToOutput(JSON.stringify(users));
-    addToOutput(t);
+    //addToOutput(JSON.stringify(users));
+    //addToOutput(t);
   }
   else if (d.type == "typing") {
     addToOutput(JSON.stringify(d));
@@ -249,6 +258,7 @@ function addToUsers(user) {
   li.addEventListener('click', function (event) {
     rebuildChatWindow(t);
   });
+  channelElements[user] = li;
 }
 
 function rebuildChatWindow(request) {
