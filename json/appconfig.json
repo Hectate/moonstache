@@ -1,5 +1,9 @@
 {
     "path":"./",
     "save":true,
-    "theme":"Light Theme"
+    "theme":"Light Theme",
+    "username":"Hectate",
+    "password":"CheckOutThisPassword",
+    "serverIP":"a-sketchy.site",
+    "serverPort":"5000"
 }

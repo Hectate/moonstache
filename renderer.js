@@ -16,6 +16,7 @@ var handle = config.username;
 var pass = config.password;
 const greeting = {type:"auth",password:pass,username:handle};
 var history = {};
+history[serverIP] = [];
 var users = {};
 
 var sanitizeHtml = require('sanitize-html');
@@ -83,26 +84,43 @@ navTilesetsEl.addEventListener('click', function () { toggleActive(navTilesetsEl
 chatTextInputEl.addEventListener('keyup', function (event) {
   if(event.keyCode == 13) {
     if(chatTextInputEl.value !== "") {
-      sendMessage(chatTextInputEl.value);
+      sendMessage(chatTextInputEl.value, serverIP);
       chatTextInputEl.value = "";
     }
   }
 });
 chatSendButtonEl.addEventListener('click', function () {
   if(chatTextInputEl.value !== "") {
-    sendMessage(chatTextInputEl.value);
+    sendMessage(chatTextInputEl.value, serverIP);
     chatTextInputEl.value = "";
   }
 });
 
-function sendMessage(string) {
-  var o = {
-    message:string,
-    author:handle,
-    type:"message"
-  };
-  //addToOutput(JSON.stringify(o));
-  ws.send(JSON.stringify(o));
+function sendMessage(string, destination) {
+  var o = {};
+  //if there are ever multiple channels, this will break - need a different check from 'serverIP'
+  if(destination == serverIP) {
+    o = {
+      message:string,
+      author:handle,
+      type:"message"
+    };
+    ws.send(JSON.stringify(o));
+  }
+  else {
+    o = {
+      message:string,
+      recipient:destination,
+      type:"direct_message"
+    };
+    ws.send(JSON.stringify(o));
+    o.author = handle;
+    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + o.author + '</b>  ' + o.message + '</div>';
+    addToTable(chatWindowTableEl,t);
+    if(!history.hasOwnProperty(destination)) { history[destination] = []; }
+    history[destination].push(o);
+  }
+  console.log(JSON.stringify(history));
 }
 
 function connectToServer(server) {
@@ -114,14 +132,14 @@ function connectToServer(server) {
   });
 
   ws.on('message', function incoming(data) {
-    parseMessage(data);
+    parseMessage(data, false);
   });
 }
 
-function parseMessage(data) {
+function parseMessage(data, fromHistory) {
   var d = JSON.parse(data);
   var clean = sanitizeHtml(data);
-  d.message = sanitizeHtml(d.message);
+  if(d.hasOwnProperty("message")) { d.message = sanitizeHtml(d.message); }
   addToOutput("Recd: " + clean);
 
   //types are "auth" "user_list" "direct_message" "message" "join" "quit" "broadcast"
@@ -131,6 +149,9 @@ function parseMessage(data) {
     chatScrollDown();
     users[d.username] = "online";
     addToOutput(JSON.stringify(users));
+    if(!fromHistory) {
+      history[serverIP].push(d);
+    }
   }
   else if(d.type == "quit") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.username + ' has left.' + '</div>';
@@ -138,16 +159,25 @@ function parseMessage(data) {
     chatScrollDown();
     users[d.username] = "offline";
     addToOutput(JSON.stringify(users));
+    if(!fromHistory) {
+      history[serverIP].push(d);
+    }
   }
   else if (d.type == "broadcast") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  ' + d.message + '</div>';
     addToTable(chatWindowTableEl,t);
+    if(!fromHistory) {
+      history[serverIP].push(d);
+    }
   }
   else if (d.type == "auth") {
     if(d.success = true) {
       navBarStatusEl.innerHTML = "Connected to..."
       var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Connected to server.</div>';
       addToTable(chatWindowTableEl,t);
+      if(!fromHistory) {
+        history[serverIP].push(d);
+      }
     }
     else {
       var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Unable to connect.</div>';
@@ -157,6 +187,10 @@ function parseMessage(data) {
   else if (d.type == "direct_message") {
     var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + '</b>  ' + d.message + '</div>';
     addToTable(chatWindowTableEl,t);
+    if(!fromHistory) {
+      if(!history.hasOwnProperty(d.author)) { history[d.author] = []; }
+      history[d.author].push(d);
+    }
   }
   else if (d.type == "user_list") {
     var t = "Users received: ";
@@ -185,6 +219,9 @@ function parseMessage(data) {
     }
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
+    if(!fromHistory) {
+      history[serverIP].push(d);
+    }
   }
 }
 
