@@ -30,28 +30,19 @@ var serverConnectButtonEl = document.getElementById('server-connect-button');
 var settingsEl = document.getElementById('settings-button');
 var navServerEl = document.getElementById('nav-server');
 var navBarStatusEl = document.getElementById('nav-center');
-var outputBoxEl = document.getElementById("output-box");
-var outputDivEl = document.getElementById('output-div');
-var saveOutputEl = document.getElementById('save-output-button');
-var copyOutputEl = document.getElementById('copy-output-button');
-var clearOutputEl = document.getElementById('clear-output-button');
-var closeOutputEl = document.getElementById('close-output-button');
-var toggleOutputEl = document.getElementById('toggle-output-button');
+//var outputBoxEl = document.getElementById("output-box");
+//var outputDivEl = document.getElementById('output-div');
+//var saveOutputEl = document.getElementById('save-output-button');
+//var copyOutputEl = document.getElementById('copy-output-button');
+//var clearOutputEl = document.getElementById('clear-output-button');
+//var closeOutputEl = document.getElementById('close-output-button');
+//var toggleOutputEl = document.getElementById('toggle-output-button');
+var chatWindowFrameEl = document.getElementById('chat-window-frame');
 var chatWindowBoxEl = document.getElementById('chat-window-box');
 var chatWindowTableEl = document.getElementById('chat-window-table');
 var chatTextInputEl = document.getElementById('chat-input-text');
 var chatSendButtonEl = document.getElementById('chat-send-button');
 var gridSmall = false;
-var navUsersEl = document.getElementById('nav-users');
-var navBackgroundsEl = document.getElementById('nav-backgrounds');
-var navBehaviorsEl = document.getElementById('nav-behaviors');
-var navExtensionsEl = document.getElementById('nav-extensions');
-var navFontsEl = document.getElementById('nav-fonts');
-var navScenesEl = document.getElementById('nav-scenes');
-var navSettingsEl = document.getElementById('nav-settings');
-var navSoundsEl = document.getElementById('nav-sounds');
-var navSettingsEl = document.getElementById('nav-settings');
-var navTilesetsEl = document.getElementById('nav-tilesets');
 
 //Settings button functions
 settingsEl.addEventListener('click', function () {
@@ -72,15 +63,6 @@ serverConnectButtonEl.addEventListener('click', function () {
   addToOutput("Connecting to " + serverIP + ":" + serverPort);
   connectToServer(serverIP + ":" + serverPort);
 });
-navUsersEl.addEventListener('click', function () { toggleActive(navUsersEl); });
-navBackgroundsEl.addEventListener('click', function () { toggleActive(navBackgroundsEl); });
-navBehaviorsEl.addEventListener('click', function () { toggleActive(navBehaviorsEl); });
-navExtensionsEl.addEventListener('click', function () { toggleActive(navExtensionsEl); });
-navFontsEl.addEventListener('click', function () { toggleActive(navFontsEl); });
-navScenesEl.addEventListener('click', function () { toggleActive(navScenesEl); });
-navSettingsEl.addEventListener('click', function () { toggleActive(navSettingsEl); });
-navSoundsEl.addEventListener('click', function () { toggleActive(navSoundsEl); });
-navTilesetsEl.addEventListener('click', function () { toggleActive(navTilesetsEl); });
 
 //keyboard and input listeners
 chatTextInputEl.addEventListener('keyup', function (event) {
@@ -122,7 +104,7 @@ function sendMessage(string, destination) {
     if(!history.hasOwnProperty(destination)) { history[destination] = []; }
     history[destination].push(o);
   }
-  console.log(JSON.stringify(history));
+  //console.log(JSON.stringify(history));
 }
 
 function connectToServer(server) {
@@ -228,7 +210,7 @@ function parseMessage(data, fromHistory) {
 }
 
 function chatScrollDown() {
-  chatWindowBoxEl.scrollTop = chatWindowBoxEl.scrollHeight;
+  chatWindowTableEl.scrollTop = chatWindowTableEl.scrollHeight;
 }
 
 function addToTable(table,data) {
@@ -239,6 +221,7 @@ function addToTable(table,data) {
 }
 
 //Output box functions and setup, etc
+/*
 clearOutputEl.addEventListener('click', function () { clearOutput(); });
 saveOutputEl.addEventListener('click', function() { saveOutput(); });
 copyOutputEl.addEventListener('click', function() { copyOutput(); });
@@ -250,13 +233,14 @@ function toggleOutputBox() {
   else { shrinkChatWindowBox(); }
 }
 function shrinkChatWindowBox() {
-  chatWindowBoxEl.style.height = "calc(70% - 78px)";
+  chatWindowFrameEl.style.height = "calc(70% - 78px)";
    gridSmall=true;
 }
 function growChatWindowBox() {
-  chatWindowBoxEl.style.height = "calc(100% - 108px)";
+  chatWindowFrameEl.style.height = "calc(100% - 78px)";
   gridSmall=false;
 }
+
 
 function saveOutput() {
   dialog.showSaveDialog(function(filename) { saveFile(outputBoxEl.innerHTML, filename); } );
@@ -267,14 +251,16 @@ function copyOutput() {
 function clearOutput() {
   outputBoxEl.innerHTML = "";
 }
+*/
 function addToOutput(content,startNewLine,endNewLine) {
   //I prefer to default to adding a newline *after* content is added, so the default is set up that way unless otherwise indicated
-  if(startNewLine === undefined) { startNewLine = false; }
-  if(endNewLine === undefined) { endNewLine = true; }
-  if(startNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
-  outputBoxEl.innerHTML += content;
-  if(endNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
-  outputBoxEl.scrollTop = outputBoxEl.scrollHeight;
+  //if(startNewLine === undefined) { startNewLine = false; }
+  //if(endNewLine === undefined) { endNewLine = true; }
+  //if(startNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
+  //outputBoxEl.innerHTML += content;
+  console.log(content);
+  //if(endNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
+  //outputBoxEl.scrollTop = outputBoxEl.scrollHeight;
 }
 
 function saveFile(data,filename) {

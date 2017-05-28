@@ -1,0 +1,34 @@
+Send this message when first opening the server connection.
+{"password":"your password","author":"your username"}
+
+Once authed, you will get this response from the server:
+{"type":"broadcast","message":"You have successfully authenticated"}
+
+You will probably see this as well. This is the format for _all_ join messages, including yours.
+{"type":"broadcast","message":"User has joined"}
+
+Messages to _and_ from the server are in this format.
+{"message":"well","author":"Hectate","type":"message"}
+
+close button for tabs...
+<span class="uk-close uk-invisible"></span>
+
+some code for the nav button for output windowo
+          <li data-uk-tooltip title="Toggle Console" id="toggle-output-button" data-uk-toggle="{target: '#output-div'}"><a><span class="uk-icon-terminal uk-icon-medium uk-icon-hover" /></a></li>
+
+some code for output window at bottom of index.html
+      <div id="output-div" class="uk-block uk-block-muted uk-padding-remove uk-visible-hover-inline uk-hidden" style="height:calc(30vh - 78px)">
+        <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:calc(30vh - 78px)"></pre>
+        <nav class="uk-navbar uk-navbar-attached">
+          <ul class="uk-navbar-nav">
+            <li data-uk-tooltip title="Copy To Clipboard"><a id="copy-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-clipboard"></i></a></li>
+            <li data-uk-tooltip title="Save To Disk"><a id="save-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-floppy-o"></i></a></li>
+          </ul>
+          <div class="uk-navbar-flip">
+            <ul class="uk-navbar-nav">
+              <li data-uk-tooltip title="Clear Output Window"><a id="clear-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-trash"></i></a></li>
+              <li data-uk-tooltip title="Close Output Window" data-uk-toggle="{target: '#output-div'}"><a id="close-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-close"></i></a></li>
+            </ul>
+          </div>
+        </nav>
+      </div>

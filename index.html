@@ -44,39 +44,6 @@
                 </form>
               </div>
             </div>
-          <li data-uk-tooltip title="Users" >
-            <a href="#offcanvas-1" data-uk-offcanvas="{mode:'slide'}">
-              <span class="uk-icon-users uk-icon-medium uk-icon-hover"/>
-            </a>
-            <div id="offcanvas-1" class="uk-offcanvas" aria-hidden="true">
-                <div class="uk-offcanvas-bar" mode="slide">
-                    <div class="uk-panel"><span class="uk-text-large uk-text-bold">Users</span><a href="javascript:UIkit.offcanvas.hide(false)" class="uk-close uk-close-alt uk-align-right"></a></div>
-                    <ul class="uk-nav uk-nav-offcanvas" data-uk-nav>
-                      <li id="nav-users">
-                        <a>User1
-                          <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">12</div>
-                        </a>
-                      </li>
-                      <li id="nav-backgrounds"><a>User2</a></li>
-                      <li id="nav-behaviors">
-                        <a>User3
-                          <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">6</div>
-                        </a>
-                      </li>
-                      <li id="nav-extensions"><a>User4</a></li>
-                      <li id="nav-fonts"><a>User5</a></li>
-                      <li id="nav-scenes"><a>User6
-                            <div class="uk-badge uk-badge-success uk-badge-notification uk-align-right">8</div>
-                          </a></li>
-                      <li id="nav-settings"><a>User7</a></li>
-                      <li id="nav-sounds"><a>User8</a></li>
-                      <li id="nav-tilesets"><a>User9</a></li>
-                    </ul>
-                    <div class="uk-panel">Click a user to open a direct message tab with them.</div>
-                </div>
-            </div>
-          </li>
-          <li data-uk-tooltip title="Toggle Console" id="toggle-output-button" data-uk-toggle="{target: '#output-div'}"><a><span class="uk-icon-terminal uk-icon-medium uk-icon-hover" /></a></li>
         </ul>
         <div class="uk-navbar-flip">
           <ul class="uk-navbar-nav">
@@ -98,54 +65,25 @@
         <div id="nav-center" class="uk-navbar-content uk-navbar-center uk-text-muted">No connection
         </div>
       </nav>
-      <ul id="chat-tab-list" class="uk-tab uk-tab-grid" data-uk-tab>
-        <li class="uk-active"><a>Server Chat</a></li>
-        <li class=""><a class="uk-visible-hover-inline">Chatroom 2</a></li>
-        <li class=""><a class="uk-visible-hover-inline">Username</a></li>
-      </ul>
-      <div id="chat-window-box" class="uk-grid uk-grid-collapse uk-scrollable-box" style="height:calc(100% - 108px);">
-        <div class="uk-width-1-1">
-          <table id="chat-window-table" class="uk-table-striped uk-table-hover uk-width-1-1">
+      <div id="chat-window-frame" class="uk-grid uk-grid-collapse" style="height:calc(100% - 78px); padding:0px;">
+        <div class="uk-width-1-6 uk-block-muted">
+          <ul class="uk-nav uk-nav-side">
+            <li><a href="#">Server Chat</a></li>
+            <li><a>User1</a></li>
+          </ul>
+        </div>
+        <div class="uk-width-5-6">
+          <div id="chat-window-box" class="uk-grid uk-grid-collapse uk-scrollable-box uk-height-1-1" style="padding:0px;">
+            <table id="chat-window-table" class="uk-table-striped uk-table-hover uk-width-1-1">
             <tbody>
             </tbody>
           </table>
+          </div>
         </div>
       </div>
       <div id="chat-input-box" class="uk-grid uk-grid-collapse">
           <input id="chat-input-text" type="text" class="uk-width-9-10" placeholder="" autofocus="autofocus">
         <button id="chat-send-button" type="button" class="uk-button uk-width-1-10"><i class="uk-icon-comment"></i></button>
-      </div>
-      <!-- hiding progress bar and cancel button - probably move to a popup later
-      <div class="uk-grid">
-        <div class="uk-width-1-10"></div>
-        <div class="uk-width-7-10">
-          <div class="uk-panel">
-            <div class="uk-progress uk-progress-striped uk-active">
-              <div class="uk-progress-bar" style="width: 100%;">Working...</div>
-            </div>
-          </div>
-        </div>
-        <div class="uk-width-2-10">
-          <div class="uk-panel">
-            <button class="uk-button uk-button-large uk-button-danger" type="button">CANCEL</button>
-          </div>
-        </div>
-      </div>
-      -->
-      <div id="output-div" class="uk-block uk-block-muted uk-padding-remove uk-visible-hover-inline uk-hidden" style="height:calc(30vh - 78px)">
-        <pre id="output-box" class="uk-scrollable-text uk-margin-bottom-remove" style="height:calc(30vh - 108px)"></pre>
-        <nav class="uk-navbar uk-navbar-attached">
-          <ul class="uk-navbar-nav">
-            <li data-uk-tooltip title="Copy To Clipboard"><a id="copy-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-clipboard"></i></a></li>
-            <li data-uk-tooltip title="Save To Disk"><a id="save-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-floppy-o"></i></a></li>
-          </ul>
-          <div class="uk-navbar-flip">
-            <ul class="uk-navbar-nav">
-              <li data-uk-tooltip title="Clear Output Window"><a id="clear-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-trash"></i></a></li>
-              <li data-uk-tooltip title="Close Output Window" data-uk-toggle="{target: '#output-div'}"><a id="close-output-button" class="uk-icon-hover uk-invisible"><i class="uk-icon-close"></i></a></li>
-            </ul>
-          </div>
-        </nav>
       </div>
     </div>
     <!-- end uk-container -->
