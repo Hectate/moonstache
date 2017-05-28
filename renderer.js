@@ -18,6 +18,7 @@ const greeting = {type:"auth",password:pass,username:handle};
 var history = {};
 history[serverIP] = [];
 var users = {};
+var displayedChat = serverIP;
 
 var sanitizeHtml = require('sanitize-html');
 
@@ -69,18 +70,18 @@ serverChatLinkEl.addEventListener('click', function (event) {
     rebuildChatWindow(serverIP);
 });
 
-//keyboard and input listeners
+//send message listeners
 chatTextInputEl.addEventListener('keyup', function (event) {
   if(event.keyCode == 13) {
     if(chatTextInputEl.value !== "") {
-      sendMessage(chatTextInputEl.value, serverIP);
+      sendMessage(chatTextInputEl.value, displayedChat);
       chatTextInputEl.value = "";
     }
   }
 });
 chatSendButtonEl.addEventListener('click', function () {
   if(chatTextInputEl.value !== "") {
-    sendMessage(chatTextInputEl.value, serverIP);
+    sendMessage(chatTextInputEl.value, displayedChat);
     chatTextInputEl.value = "";
   }
 });
@@ -104,7 +105,7 @@ function sendMessage(string, destination) {
     };
     ws.send(JSON.stringify(o));
     o.author = handle;
-    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + o.author + '</b>  ' + o.message + '</div>';
+    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + o.author + ':</b>  ' + o.message + '</div>';
     addToTable(chatWindowTableEl,t);
     if(!history.hasOwnProperty(destination)) { history[destination] = []; }
     history[destination].push(o);
@@ -126,7 +127,13 @@ function connectToServer(server) {
 }
 
 function parseMessage(data, fromHistory) {
-  var d = JSON.parse(data);
+  var d = {};
+  if(fromHistory) {
+    d = data;
+  }
+  else {
+    d = JSON.parse(data);
+  }
   var clean = sanitizeHtml(data);
   if(d.hasOwnProperty("message")) { d.message = sanitizeHtml(d.message); }
   addToOutput("Recd: " + clean);
@@ -175,7 +182,7 @@ function parseMessage(data, fromHistory) {
     }
   }
   else if (d.type == "direct_message") {
-    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + '</b>  ' + d.message + '</div>';
+    var t = '<div class="uk-text-success"><span class="uk-icon-user-secret"></span>  <b>' + d.author + ':</b>  ' + d.message + '</div>';
     addToTable(chatWindowTableEl,t);
     if(!fromHistory) {
       if(!history.hasOwnProperty(d.author)) { history[d.author] = []; }
@@ -242,9 +249,20 @@ function addToUsers(user) {
 function rebuildChatWindow(request) {
   if(request == serverIP) {
     console.log("Rebuild server chat for: " + request);
+    displayedChat = serverIP;
   }
   else {
     console.log("Rebuild user chat for: " + request.textContent);
+    displayedChat = request.textContent;
+  }
+  chatWindowTableEl.innerHTML = "";
+  if(history.hasOwnProperty(displayedChat)) {
+    for(var i=0; i < history[displayedChat].length; i++) {
+      parseMessage(history[displayedChat][i],true);
+    }
+  }
+  else {
+    addToTable(chatWindowTableEl,"<i>You have no chat history with " + displayedChat + " yet.</i>");
   }
 }
 //Output box functions and setup, etc
