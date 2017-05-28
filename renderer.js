@@ -147,7 +147,9 @@ function parseMessage(data, fromHistory) {
       users[d.username] = "online";
       addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
-      addToUsers(d.username);
+      if(!users.hasOwnProperty(d.username)) {
+        addToUsers(d.username);
+      }
     }
   }
   else if(d.type == "quit") {
