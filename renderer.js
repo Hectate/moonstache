@@ -228,7 +228,7 @@ function parseMessage(data, fromHistory) {
 }
 
 function chatScrollDown() {
-  chatWindowTableEl.scrollTop = chatWindowTableEl.scrollHeight;
+  chatWindowBoxEl.scrollTop = chatWindowBoxEl.scrollHeight;
 }
 
 function addToTable(table,data) {
