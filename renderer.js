@@ -144,12 +144,12 @@ function parseMessage(data, fromHistory) {
     addToTable(chatWindowTableEl,t);
     chatScrollDown();
     if(!fromHistory) {
-      users[d.username] = "online";
-      addToOutput(JSON.stringify(users));
-      history[serverIP].push(d);
       if(!users.hasOwnProperty(d.username)) {
         addToUsers(d.username);
       }
+      users[d.username] = "online";
+      addToOutput(JSON.stringify(users));
+      history[serverIP].push(d);
     }
   }
   else if(d.type == "quit") {
@@ -195,6 +195,9 @@ function parseMessage(data, fromHistory) {
     var t = "Users received: ";
     for(var i=0; i < d.users.length; i++) {
       t += d.users[i] + ", ";
+      if(!users.hasOwnProperty(d.users[i])) {
+        addToUsers(d.users[i]);
+      }
       users[d.users[i]] = "online";
     }
     addToOutput(JSON.stringify(users));
