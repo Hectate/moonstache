@@ -1,11 +1,28 @@
 Send this message when first opening the server connection.
-{"password":"your password","author":"your username"}
+  {"type": "auth", "author": "your username", "password": "your password"}
 
-Once authed, you will get this response from the server:
-{"type":"broadcast","message":"You have successfully authenticated"}
+Once authed, you will get one of these responses from the server:
 
-You will probably see this as well. This is the format for _all_ join messages, including yours.
-{"type":"broadcast","message":"User has joined"}
+  Login Success (Existing Account)
+  {"type": "auth", "new_account": false, "success": true}
+
+  Login Success (New Account):
+  {"type": "auth", "new_account": true, "success": true}
+
+  Login Failure:
+  {"type": "auth", "new_account": false, "success": false}
+
+Join and leave messages
+  {"type": "join", "username": "Dapper"}
+  {"type": "quit", "username": "stalin"}
 
 Messages to _and_ from the server are in this format.
-{"message":"well","author":"Hectate","type":"message"}
+  {"message":"well","author":"Hectate","type":"message"}
+
+Typing is now an option
+
+  Send this when you're typing
+  {"type": "typing"}
+
+  Recieve this when others are typing
+  {"type": "typing", "username": "zachary"}
