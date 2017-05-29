@@ -6,11 +6,8 @@ const app = electron.app
 const dialog = electron.dialog;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
-const JSZip = require('jszip');
 
 global.appconfig = require( __dirname + '/json/appconfig.json');
-global.gameA = {};
-global.gameB = {};
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -75,7 +72,6 @@ app.on('activate', function () {
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
 ipcMain.on('open-settings-window', function () {
-    //console.log("open-settings-window click detected from event in main.js");
     settingsWindow = new BrowserWindow({
       parent:mainWindow,
       modal:true,
@@ -88,7 +84,6 @@ ipcMain.on('open-settings-window', function () {
     });
     settingsWindow.loadURL(`file://${__dirname}/settings.html`);
     settingsWindow.once('ready-to-show', () => {
-      //settingsWindow.webContents.openDevTools();
       settingsWindow.webContents.send('fill-settings-form');
       settingsWindow.show();
     });
@@ -101,18 +96,6 @@ ipcMain.on('close-settings-window', function () {
 
 ipcMain.on('save-settings', (event, arg) => {
   saveSettings(arg);
-});
-
-ipcMain.on('request-slot-a', function () {
-  getFile().then(function(response) {
-    mainWindow.send('fill-slot-a',response);
-  }).catch(function(error) {
-    console.log(error);
-   });
-});
-ipcMain.on('request-slot-b', function () {
-  var fileData = getFile();
-  mainWindow.send('fill-slot-b',fileData);
 });
 
 function saveSettings(config) {

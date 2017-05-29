@@ -33,13 +33,6 @@ var serverConnectButtonEl = document.getElementById('server-connect-button');
 var settingsEl = document.getElementById('settings-button');
 var navServerEl = document.getElementById('nav-server');
 var navBarStatusEl = document.getElementById('nav-center');
-//var outputBoxEl = document.getElementById("output-box");
-//var outputDivEl = document.getElementById('output-div');
-//var saveOutputEl = document.getElementById('save-output-button');
-//var copyOutputEl = document.getElementById('copy-output-button');
-//var clearOutputEl = document.getElementById('clear-output-button');
-//var closeOutputEl = document.getElementById('close-output-button');
-//var toggleOutputEl = document.getElementById('toggle-output-button');
 var channelUserListEl = document.getElementById('channel-user-list');
 var serverChatLinkEl = document.getElementById('server-chat-link');
 channelElements[serverIP] = serverChatLinkEl;
@@ -52,16 +45,8 @@ var gridSmall = false;
 
 //Settings button functions
 settingsEl.addEventListener('click', function () {
-  //modal = UIkit.modal.blockUI('Config');
-  //setTimeout(function(){modal.hide()},5000);
   ipc.send('open-settings-window');
 });
-/*
-ipc.on('modal-hide', function() {
-  console.log('hiding modal');
-  modal.hide();
-});
-*/
 
 //Navs listeners
 navServerEl.addEventListener('click',function () { console.log("server connection needed."); });
@@ -114,7 +99,6 @@ function sendMessage(string, destination) {
     if(!history.hasOwnProperty(destination)) { history[destination] = []; }
     history[destination].push(o);
   }
-  //console.log(JSON.stringify(history));
 }
 
 function connectToServer(server) {
@@ -271,7 +255,6 @@ function addToTable(table,data) {
     var row = table.insertRow(-1);
     var cel = row.insertCell(0);
     cel.innerHTML = data;
-  //addToOutput("Table " + table.id + " : " + data);
 }
 
 function addToUsers(user) {
@@ -323,47 +306,9 @@ function rebuildChatWindow(request) {
     addToTable(chatWindowTableEl,"<i>You have no chat history with " + displayedChat + " yet.</i>");
   }
 }
-//Output box functions and setup, etc
-/*
-clearOutputEl.addEventListener('click', function () { clearOutput(); });
-saveOutputEl.addEventListener('click', function() { saveOutput(); });
-copyOutputEl.addEventListener('click', function() { copyOutput(); });
-closeOutputEl.addEventListener('click', function () { toggleOutputBox(); });
-toggleOutputEl.addEventListener('click', function () { toggleOutputBox(); });
 
-function toggleOutputBox() {
-  if(gridSmall) { growChatWindowBox(); }
-  else { shrinkChatWindowBox(); }
-}
-function shrinkChatWindowBox() {
-  chatWindowFrameEl.style.height = "calc(70% - 78px)";
-   gridSmall=true;
-}
-function growChatWindowBox() {
-  chatWindowFrameEl.style.height = "calc(100% - 78px)";
-  gridSmall=false;
-}
-
-
-function saveOutput() {
-  dialog.showSaveDialog(function(filename) { saveFile(outputBoxEl.innerHTML, filename); } );
-}
-function copyOutput() {
-  clipboard.writeText(outputBoxEl.innerHTML);
-}
-function clearOutput() {
-  outputBoxEl.innerHTML = "";
-}
-*/
 function addToOutput(content,startNewLine,endNewLine) {
-  //I prefer to default to adding a newline *after* content is added, so the default is set up that way unless otherwise indicated
-  //if(startNewLine === undefined) { startNewLine = false; }
-  //if(endNewLine === undefined) { endNewLine = true; }
-  //if(startNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
-  //outputBoxEl.innerHTML += content;
   console.log(content);
-  //if(endNewLine == true) { outputBoxEl.innerHTML += os.EOL; }
-  //outputBoxEl.scrollTop = outputBoxEl.scrollHeight;
 }
 
 function saveFile(data,filename) {
