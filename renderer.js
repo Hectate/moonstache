@@ -110,6 +110,7 @@ function sendMessage(string, destination) {
     o.author = handle;
     var t = '<b>' + o.author + ':</b>  ' + o.message + '</div>';
     addToTable(chatWindowTableEl,t);
+    chatScrollDown();
     if(!history.hasOwnProperty(destination)) { history[destination] = []; }
     history[destination].push(o);
   }
@@ -139,35 +140,48 @@ function parseMessage(data, fromHistory) {
   }
   var clean = sanitizeHtml(data);
   if(d.hasOwnProperty("message")) { d.message = sanitizeHtml(d.message); }
-  //addToOutput("Recd: " + clean);
 
   //types are "auth" "user_list" "direct_message" "message" "join" "quit" "broadcast"
   if(d.type == "join") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-plus"></span>  ' + d.username + ' has joined.' + '</div>';
-    addToTable(chatWindowTableEl,t);
-    chatScrollDown();
+    if(displayedChat == serverIP) {
+      addToTable(chatWindowTableEl,t);
+      chatScrollDown();
+    }
+    else {
+      addNotification(serverIP);
+    }
     if(!fromHistory) {
       if(!users.hasOwnProperty(d.username)) {
         addToUsers(d.username);
       }
       users[d.username] = "online";
-      //addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
     }
   }
   else if(d.type == "quit") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-user-times"></span>  ' + d.username + ' has left.' + '</div>';
-    addToTable(chatWindowTableEl,t);
-    chatScrollDown();
+    if(displayedChat == serverIP) {
+      addToTable(chatWindowTableEl,t);
+      chatScrollDown();
+    }
+    else {
+      addNotification(serverIP);
+    }
     if(!fromHistory) {
       users[d.username] = "offline";
-      //addToOutput(JSON.stringify(users));
       history[serverIP].push(d);
     }
   }
   else if (d.type == "broadcast") {
     var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  ' + d.message + '</div>';
-    addToTable(chatWindowTableEl,t);
+    if(displayedChat == serverIP) {
+      addToTable(chatWindowTableEl,t);
+      chatScrollDown();
+    }
+    else {
+      addNotification(serverIP);
+    }
     if(!fromHistory) {
       history[serverIP].push(d);
     }
@@ -176,7 +190,13 @@ function parseMessage(data, fromHistory) {
     if(d.success = true) {
       navBarStatusEl.innerHTML = "Connected to..."
       var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Connected to server.</div>';
-      addToTable(chatWindowTableEl,t);
+      if(displayedChat == serverIP) {
+        addToTable(chatWindowTableEl,t);
+        chatScrollDown();
+      }
+      else {
+        addNotification(serverIP);
+      }
       if(!fromHistory) {
         history[serverIP].push(d);
       }
@@ -190,10 +210,10 @@ function parseMessage(data, fromHistory) {
     var t = "<b>" + d.author + ":</b> " + d.message;
     if(displayedChat == d.author || d.author == handle) {
       addToTable(chatWindowTableEl,t);
+      chatScrollDown();
     }
     else {
-      //TODO this isn't working?
-      channelElements[d.author].firstElementChild.className += " uk-text-success";
+      addNotification(d.author);
     }
     if(!fromHistory) {
       if(!history.hasOwnProperty(d.author)) { history[d.author] = []; }
@@ -209,13 +229,11 @@ function parseMessage(data, fromHistory) {
       }
       users[d.users[i]] = "online";
     }
-    //addToOutput(JSON.stringify(users));
-    //addToOutput(t);
   }
   else if (d.type == "typing") {
     addToOutput(JSON.stringify(d));
   }
-  else { //presumably a message or anything else lol
+  else if(d.type == "message") {
     var t = "";
     var arrText = d.message.split(" ");
     if(arrText[0] == "/me") {
@@ -228,11 +246,20 @@ function parseMessage(data, fromHistory) {
     else {
       var t = "<b>" + d.author + ":</b> " + d.message;
     }
-    addToTable(chatWindowTableEl,t);
-    chatScrollDown();
+    if(displayedChat == serverIP) {
+      addToTable(chatWindowTableEl,t);
+      chatScrollDown();
+    }
+    else {
+      addNotification(serverIP);
+    }
     if(!fromHistory) {
       history[serverIP].push(d);
     }
+  }
+  else {
+    addToOutput("Unrecognized packet type!");
+    addToOutput(JSON.stringify(data))
   }
 }
 
@@ -259,6 +286,22 @@ function addToUsers(user) {
     rebuildChatWindow(t);
   });
   channelElements[user] = li;
+}
+
+function addNotification(name) {
+  //stupid hack to prevent multiple notifications haha
+  clearNotification(name);
+  channelElements[name].firstElementChild.innerHTML += ' <span class="uk-icon-comment-o uk-text-bold uk-text-primary"></span>';
+  //sound effect?
+}
+
+function clearNotification(name) {
+  if(name == serverIP) {
+    channelElements[name].firstElementChild.innerHTML = 'Server Chat';
+  }
+  else {
+    channelElements[name].firstElementChild.innerHTML = name;
+  }
 }
 
 function rebuildChatWindow(request) {
