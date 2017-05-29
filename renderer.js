@@ -306,12 +306,12 @@ function clearNotification(name) {
 
 function rebuildChatWindow(request) {
   if(request == serverIP) {
-    console.log("Rebuild server chat for: " + request);
     displayedChat = serverIP;
+    clearNotification(serverIP);
   }
   else {
-    console.log("Rebuild user chat for: " + request.textContent);
     displayedChat = request.textContent;
+    clearNotification(request.textContent);
   }
   chatWindowTableEl.innerHTML = "";
   if(history.hasOwnProperty(displayedChat)) {
