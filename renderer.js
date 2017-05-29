@@ -56,6 +56,8 @@ serverConnectButtonEl.addEventListener('click', function () {
 });
 serverChatLinkEl.addEventListener('click', function (event) {
     rebuildChatWindow(serverIP);
+    clearAllActive();
+    serverChatLinkEl.classList.add("uk-active");
 });
 
 //send message listeners
@@ -141,6 +143,7 @@ function parseMessage(data, fromHistory) {
       }
       users[d.username] = "online";
       history[serverIP].push(d);
+      setNameOnline(d.username);
     }
   }
   else if(d.type == "quit") {
@@ -155,6 +158,7 @@ function parseMessage(data, fromHistory) {
     if(!fromHistory) {
       users[d.username] = "offline";
       history[serverIP].push(d);
+      setNameOffline(d.username);
     }
   }
   else if (d.type == "broadcast") {
@@ -186,7 +190,7 @@ function parseMessage(data, fromHistory) {
       }
     }
     else {
-      var t = '<div class="uk-text-primary"><span class="uk-icon-exchange"></span>  Unable to connect.</div>';
+      var t = '<div class="uk-text-danger"><span class="uk-icon-exchange"></span>  Unable to connect.</div>';
       addToTable(chatWindowTableEl,t);
     }
   }
@@ -215,7 +219,7 @@ function parseMessage(data, fromHistory) {
     }
   }
   else if (d.type == "typing") {
-    addToOutput(JSON.stringify(d));
+    //addToOutput(JSON.stringify(d));
   }
   else if(d.type == "message") {
     var t = "";
@@ -267,6 +271,8 @@ function addToUsers(user) {
   channelUserListEl.appendChild(li);
   li.addEventListener('click', function (event) {
     rebuildChatWindow(t);
+    clearAllActive();
+    li.classList.add("uk-active");
   });
   channelElements[user] = li;
 }
@@ -287,14 +293,51 @@ function clearNotification(name) {
   }
 }
 
+function setNameOffline(name) {
+  channelElements[name].firstElementChild.classList.add("uk-text-muted");
+  if(displayedChat == name) {
+    chatTextInputEl.placeholder = "This user is offline.";
+    chatTextInputEl.disabled = true;
+    chatSendButtonEl.disabled = true;
+  }
+}
+
+function setNameOnline(name) {
+  channelElements[name].firstElementChild.classList.remove("uk-text-muted");
+  if(displayedChat == name) {
+    chatTextInputEl.placeholder = "";
+    chatTextInputEl.disabled = false;
+    chatSendButtonEl.disabled = false;
+  }
+}
+
 function rebuildChatWindow(request) {
   if(request == serverIP) {
     displayedChat = serverIP;
     clearNotification(serverIP);
+    chatTextInputEl.placeholder = '';
+    chatTextInputEl.disabled = false;
+    chatSendButtonEl.disabled = false;
+  }
+  else if (request.textContent == handle) {
+    displayedChat = request.textContent;
+    chatTextInputEl.placeholder = "You cannot send yourself direct messages.";
+    chatTextInputEl.disabled = true;
+    chatSendButtonEl.disabled = true;
   }
   else {
     displayedChat = request.textContent;
     clearNotification(request.textContent);
+    if(users[displayedChat] == 'offline') {
+      chatTextInputEl.placeholder = "This user is offline.";
+      chatTextInputEl.disabled = true;
+      chatSendButtonEl.disabled = true;
+    }
+    else {
+      chatTextInputEl.placeholder = '';
+      chatTextInputEl.disabled = false;
+      chatSendButtonEl.disabled = false;
+    }
   }
   chatWindowTableEl.innerHTML = "";
   if(history.hasOwnProperty(displayedChat)) {
@@ -325,4 +368,11 @@ function toggleVisibility(element) {
 }
 function toggleActive(element) {
   element.classList.toggle('uk-active');
+}
+function clearAllActive() {
+  serverChatLinkEl.classList.remove("uk-active");
+  var i;
+  for(i in channelElements) {
+    channelElements[i].classList.remove("uk-active");
+  }
 }
